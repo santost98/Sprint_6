@@ -2,22 +2,22 @@ from selenium.webdriver.common.by import By
 
 class HomePageLocators:
     # Кнопки заказа
-    ORDER_BUTTON_HEADER = (By.XPATH, "//button[contains(@class, 'Button_Button__ra12g')][1]")
-    ORDER_BUTTON_BODY = (By.XPATH, "//button[contains(@class, 'Button_Button__ra12g') and contains(text(), 'Заказать')]")
+    ORDER_BUTTON_HEADER = (By.CSS_SELECTOR, "button.Button_Button__ra12g:not(.Button_Middle__1CSJM)")
+    ORDER_BUTTON_BODY = (By.CSS_SELECTOR, "button.Button_Button__ra12g.Button_Middle__1CSJM")
     
     # Логотипы
-    LOGO_YANDEX = (By.XPATH, "//img[@alt='Yandex']")
-    LOGO_SAMOKAT = (By.XPATH, "//img[@alt='Scooter']")
+    LOGO_YANDEX = (By.CSS_SELECTOR, "img[alt='Yandex']")
+    LOGO_SAMOKAT = (By.CSS_SELECTOR, "img[alt='Scooter']")
     
     # FAQ
-    FAQ_QUESTIONS = (By.XPATH, "//div[contains(@class, 'accordion__button')]")
-    FAQ_ANSWERS = (By.XPATH, "//div[contains(@class, 'accordion__panel')]")
+    FAQ_QUESTIONS = (By.CSS_SELECTOR, "div.accordion__button")
+    FAQ_ANSWERS = (By.CSS_SELECTOR, "div.accordion__panel")
     
     # Куки
     COOKIE_BUTTON = (By.ID, "rcc-confirm-button")
 
     # Блок "Как это работает"
-    HOW_IT_WORKS_BLOCK = (By.XPATH, '//div[text()="Как это работает"]')
+    HOW_IT_WORKS_BLOCK = (By.CSS_SELECTOR, 'div:has-text("Как это работает")')
 
     # Блок FAQ
     ACCORDION_BUTTON_FAQ_1 = (By.ID, 'accordion__heading-0')

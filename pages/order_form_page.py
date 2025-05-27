@@ -2,8 +2,6 @@ from .base_page import BasePage
 from locators.order_form_locators import OrderFormLocators
 import allure
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 
 class OrderFormPage(BasePage):
     @allure.step('Заполняем поле имени значением {first_name}')
@@ -30,7 +28,7 @@ class OrderFormPage(BasePage):
 
     @allure.step('Нажимаем кнопку "Далее"')
     def click_continue_button(self):
-        self.wait.until(EC.element_to_be_clickable(OrderFormLocators.CONTINUE_BUTTON))
+        self.wait_for_element_clickable(OrderFormLocators.CONTINUE_BUTTON)
         self.click_element(OrderFormLocators.CONTINUE_BUTTON)
 
     @allure.step('Заполняем дату доставки значением {date}')
@@ -41,30 +39,27 @@ class OrderFormPage(BasePage):
     def select_rental_duration(self, duration):
         # Сначала закрываем календарь, если он открыт
         try:
-            calendar = self.driver.find_element(By.CLASS_NAME, "react-datepicker__current-month")
+            calendar = self.find_element((By.CLASS_NAME, "react-datepicker__current-month"))
             if calendar.is_displayed():
                 # Кликаем в любое место страницы, чтобы закрыть календарь
-                self.driver.find_element(By.TAG_NAME, "body").click()
+                self.find_element((By.TAG_NAME, "body")).click()
                 # Ждем, пока календарь исчезнет
-                WebDriverWait(self.driver, 10).until_not(
-                    EC.visibility_of_element_located((By.CLASS_NAME, "react-datepicker__current-month"))
-                )
+                self.wait_for_element_not_visible((By.CLASS_NAME, "react-datepicker__current-month"))
         except:
             pass
         
         # Ждем, пока поле выбора срока аренды станет кликабельным
-        self.wait.until(EC.element_to_be_clickable(OrderFormLocators.RENTAL_DURATION_FIELD))
+        self.wait_for_element_clickable(OrderFormLocators.RENTAL_DURATION_FIELD)
         
         # Скроллим до элемента
-        element = self.driver.find_element(*OrderFormLocators.RENTAL_DURATION_FIELD)
-        self.driver.execute_script("arguments[0].scrollIntoView();", element)
+        self.scroll_to_element(OrderFormLocators.RENTAL_DURATION_FIELD)
         
         # Теперь кликаем на поле выбора срока аренды
         self.click_element(OrderFormLocators.RENTAL_DURATION_FIELD)
         
         # Ждем появления опций и выбираем нужный срок
         duration_option = (By.XPATH, f"//div[contains(@class, 'Dropdown-option') and text()='{duration}']")
-        self.wait.until(EC.element_to_be_clickable(duration_option))
+        self.wait_for_element_clickable(duration_option)
         self.click_element(duration_option)
 
     @allure.step('Выбираем цвет самоката')
@@ -81,26 +76,19 @@ class OrderFormPage(BasePage):
     @allure.step('Нажимаем кнопку "Заказать"')
     def click_order_button(self):
         # Скроллим до кнопки
-        element = self.driver.find_element(*OrderFormLocators.ORDER_BUTTON)
-        self.driver.execute_script("arguments[0].scrollIntoView();", element)
-        self.wait.until(EC.element_to_be_clickable(OrderFormLocators.ORDER_BUTTON), message='Кнопка Заказать не кликабельна')
+        self.scroll_to_element(OrderFormLocators.ORDER_BUTTON)
+        self.wait_for_element_clickable(OrderFormLocators.ORDER_BUTTON, timeout=20)
         self.click_element(OrderFormLocators.ORDER_BUTTON, timeout=20)
 
     @allure.step('Подтверждаем заказ')
     def confirm_order(self):
         # Ждём появления окна подтверждения
-        self.wait.until(
-            EC.visibility_of_element_located((By.CLASS_NAME, "Order_Modal__YZ-d3"))
-        )
+        self.wait_for_element_visible((By.CLASS_NAME, "Order_Modal__YZ-d3"))
         # Ждём, пока кнопка "Да" станет кликабельной
-        self.wait.until(
-            EC.element_to_be_clickable(OrderFormLocators.YES_BUTTON_POP_UP_CONFIRM_ORDER)
-        )
+        self.wait_for_element_clickable(OrderFormLocators.YES_BUTTON_POP_UP_CONFIRM_ORDER)
         self.click_element(OrderFormLocators.YES_BUTTON_POP_UP_CONFIRM_ORDER)
 
     @allure.step('Проверяем, что заказ оформлен')
     def check_order_complete(self):
-        self.wait.until(
-            EC.visibility_of_element_located(OrderFormLocators.POP_UP_COMPLETE_ORDER)
-        )
+        self.wait_for_element_visible(OrderFormLocators.POP_UP_COMPLETE_ORDER)
         return self.find_element(OrderFormLocators.POP_UP_COMPLETE_ORDER).is_displayed()

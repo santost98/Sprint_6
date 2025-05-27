@@ -1,6 +1,8 @@
 from .base_page import BasePage
 from locators.home_page_locators import HomePageLocators
 import allure
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 
 class HomePage(BasePage):
     @allure.step('Кликаем на кнопку "Заказать" в хедере')
@@ -9,9 +11,9 @@ class HomePage(BasePage):
 
     @allure.step('Кликаем на кнопку "Заказать" в теле страницы')
     def click_order_button_body(self):
-        # Скроллим до кнопки перед кликом
-        element = self.driver.find_element(*HomePageLocators.ORDER_BUTTON_BODY)
-        self.driver.execute_script("arguments[0].scrollIntoView();", element)
+        self.wait_for_element_visible(HomePageLocators.ORDER_BUTTON_BODY, timeout=10)
+        self.scroll_to_element(HomePageLocators.ORDER_BUTTON_BODY)
+        self.wait_for_element_clickable(HomePageLocators.ORDER_BUTTON_BODY, timeout=10)
         self.click_element(HomePageLocators.ORDER_BUTTON_BODY)
 
     @allure.step('Принимаем куки')
@@ -35,3 +37,15 @@ class HomePage(BasePage):
     @allure.step('Кликаем на логотип Самоката')
     def click_logo_samokat(self):
         self.click_element(HomePageLocators.LOGO_SAMOKAT)
+
+    @allure.step('Переключаемся на окно с индексом {index}')
+    def switch_to_window(self, index):
+        return super().switch_to_window(index)
+
+    @allure.step('Получаем текущий URL')
+    def get_current_url(self):
+        return super().get_current_url()
+
+    @allure.step('Устанавливаем неявное ожидание {timeout} секунд')
+    def set_implicit_wait(self, timeout):
+        return super().set_implicit_wait(timeout)
