@@ -1,0 +1,6 @@
+class Config:
+    BASE_URL = 'https://qa-scooter.praktikum-services.ru/'
+    DZEN_URL = 'https://dzen.ru/'
+
+    IMPLICIT_WAIT = 10
+    EXPLICIT_WAIT = 10 
