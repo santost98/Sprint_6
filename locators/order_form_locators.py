@@ -18,4 +18,11 @@ class OrderFormLocators:
     COMMENT_FIELD = (By.XPATH, "//textarea[contains(@placeholder, 'Комментарий для курьера')] | //input[contains(@placeholder, 'Комментарий для курьера')]")
     ORDER_BUTTON = (By.XPATH, "//button[contains(@class, 'Button_Button__ra12g') and contains(@class, 'Button_Middle__1CSJM') and text()='Заказать']")
     YES_BUTTON_POP_UP_CONFIRM_ORDER = (By.XPATH, "//div[contains(@class, 'Order_Modal__YZ-d3')]//button[text()='Да']")
-    POP_UP_COMPLETE_ORDER = (By.XPATH, "//div[contains(@class, 'Order_Modal__YZ-d3')]//div[contains(@class, 'Order_ModalHeader__3FDaJ') and contains(text(), 'Заказ оформлен')]") 
+    POP_UP_COMPLETE_ORDER = (By.XPATH, "//div[contains(@class, 'Order_Modal__YZ-d3')]//div[contains(@class, 'Order_ModalHeader__3FDaJ') and contains(text(), 'Заказ оформлен')]")
+    
+    CALENDAR = (By.CLASS_NAME, "react-datepicker__current-month")
+    BODY = (By.TAG_NAME, "body")
+    
+    @staticmethod
+    def get_duration_option(duration):
+        return (By.XPATH, f"//div[contains(@class, 'Dropdown-option') and text()='{duration}']") 

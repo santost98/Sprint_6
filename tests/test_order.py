@@ -6,25 +6,22 @@ from data import ORDER_DATA
 
 @allure.feature('Заказ самоката')
 class TestOrder:
-    @pytest.mark.parametrize("order_data,button_type", [
-        (data, "header") for data in ORDER_DATA
+    @pytest.mark.parametrize("order_data,button_method", [
+        (data, "click_order_button_header") for data in ORDER_DATA
     ] + [
-        (data, "body") for data in ORDER_DATA
+        (data, "click_order_button_body") for data in ORDER_DATA
     ])
     @allure.title('Тест заказа самоката')
     @allure.description('Проверяем полный флоу заказа самоката')
-    def test_order_scooter(self, driver, order_data, button_type):
+    def test_order_scooter(self, driver, order_data, button_method):
         home_page = HomePage(driver)
         order_form_page = OrderFormPage(driver)
 
         with allure.step('Принимаем куки'):
             home_page.accept_cookies()
 
-        with allure.step(f'Кликаем на кнопку "Заказать" в {"хедере" if button_type == "header" else "теле страницы"}'):
-            if button_type == "header":
-                home_page.click_order_button_header()
-            else:
-                home_page.click_order_button_body()
+        with allure.step('Кликаем на кнопку "Заказать"'):
+            getattr(home_page, button_method)()
 
         with allure.step('Заполняем первую страницу формы'):
             order_form_page.fill_first_name(order_data["name"])
@@ -46,5 +43,3 @@ class TestOrder:
 
         with allure.step('Проверяем успешное создание заказа'):
             assert order_form_page.check_order_complete(), 'Сообщение об успешном заказе не отображается'
-
-        driver.quit()
